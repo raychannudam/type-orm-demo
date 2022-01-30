@@ -1,0 +1,37 @@
+video source: https://www.youtube.com/watch?v=sNosL578ECo
+
+//to connect database (sqlite)
+1. run npm i --save @nestjs/typeorm typeorm
+2. run npm i -g typeorm
+3. run npm install -g ts-node
+4. create one file in root named: config.ts and write:
+import { SqliteConnectionOptions } from "typeorm/driver/sqlite/SqliteConnectionOptions"
+
+const config: SqliteConnectionOptions = {
+    type: 'sqlite',
+    database: 'db',
+    entities: ['dist/src/**/*.entity.js'],
+    synchronize: false,
+    migrations: [
+        'dist/src/db/migrations/*.js'
+    ],
+    cli: {
+        migrationsDir: 'src/db/migrations'
+    }
+}
+
+export default config
+5. go to app.module.ts and write TypeOrmModule.forRoot(config) in imports session
+6. add this 4 lines in to package.json in script session
+"test:e2e": "jest --config ./test/jest-e2e.json",
+"typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
+"migration:generate": "npm run build && npm run typeorm migration:generate -- -n",
+"migration:run": "npm run build && npm run typeorm migration:run"
+
+//go to module again and add 
+TypeOrmModule.forFeature([(list of enitity)]) in imports session
+
+//go to server and add 
+constructor(@InjectRepository(namrofentity) private userRepository: Repository<(nameofentity)>){}
+
+more: https://typeorm.io/#/using-cli/installing-cli
